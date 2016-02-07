@@ -17,24 +17,51 @@ limitations under the License.
           body {
             overflow:hidden;
           }
-      div{
-            height:720PX;
-            width:1280PX;
+      span{
             text-align:center;
-            border:0px solid silver;
-            display: table-cell;
             vertical-align:middle;
-            color:#FFFFFF;
-            background-color:#000000;
             font-weight:bold;
-            font-family:Verdana, Geneva, sans-serif;
-            font-size:40px;
+            font-size:50px;
+            min-width:80px;
+            min-height:80px;
+            padding:8px;
+            display: inline-block;
+            /*background-color: gray*/
+        }
+      span.middle{
+            border:2px solid black;
+        }
+      span.top{
+            border-top:2px solid black;
+        }
+      span.bottom{
+            border-bottom:2px solid black;
+        }
+      span.right{
+            border-right:2px solid black;
+        }
+      span.left{
+            border-left:2px solid black;
         }
     </style>
     <title>Cast Hello Text</title>
   </head>
   <body>
-        <DIV id="message">Talk to me</DIV>
+        <div>
+          <span class="right bottom" id="cell_1"></span>
+          <span class="bottom" id="cell_2"></span>
+          <span class="left bottom" id="cell_3"></span>
+        </div>
+        <div>
+          <span class="right" id="cell_4"></span>
+          <span id="cell_5"></span>
+          <span class="left" id="cell_6"></span>
+        </div>
+        <div>
+          <span class="right top" id="cell_7"></span>
+          <span class="top" id="cell_8"></span>
+          <span class="left top" id="cell_9"></span>
+        </div>
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <script type="text/javascript">
       window.onload = function() {
@@ -75,7 +102,8 @@ limitations under the License.
         window.messageBus.onMessage = function(event) {
           console.log('Message [' + event.senderId + ']: ' + event.data);
           // display the message from the sender
-          displayText(event.data);
+          var data = JSON.parse(event.data);
+          display(data);
           // inform all senders on the CastMessageBus of the incoming message event
           // sender message listener will be invoked
           window.messageBus.send(event.senderId, event.data);
@@ -86,10 +114,12 @@ limitations under the License.
       };
       
       // utility function to display the text message in the input field
-      function displayText(text) {
-        console.log(text);
-        document.getElementById("message").innerHTML=text;
-        window.castReceiverManager.setApplicationState(text);
+      function display(data) {
+        console.log(data);
+        var id = data['id'];
+        var value = data['value'];
+        document.getElementById("cell_" + id).innerHTML=value;
+        window.castReceiverManager.setApplicationState("set value");
       };
     </script>
   </body>
