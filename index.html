@@ -12,5 +12,41 @@
         <div id="gomoku">
 
         </div>
-    </body>
+    <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+    <script type="text/javascript">
+      window.onload = function() {
+        window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+
+        castReceiverManager.onReady = function(event) {
+          window.castReceiverManager.setApplicationState("Application status is ready...");
+        };
+
+        castReceiverManager.onSenderConnected = function(event) {
+          console.log('Received Sender Connected event: ' + event.data);
+          console.log(window.castReceiverManager.getSender(event.data).userAgent);
+        };
+
+        castReceiverManager.onSenderDisconnected = function(event) {
+          if (window.castReceiverManager.getSenders().length == 0) {
+	          window.close();
+	        }
+        };
+
+        window.messageBus =
+          window.castReceiverManager.getCastMessageBus(
+              'urn:x-cast:com.google.cast.sample.helloworld');
+        window.messageBus.onMessage = function(event) {
+          setValue(event.data);
+          window.messageBus.send(event.senderId, event.data);
+        }
+        window.castReceiverManager.start({statusText: "Application is starting"});
+      };
+
+      function setValue(value) {
+        // document.getElementById("message").innerHTML=text;
+        select(1,1);
+        window.castReceiverManager.setApplicationState(text);
+      };
+    </script>
+  </body>
 </html>
